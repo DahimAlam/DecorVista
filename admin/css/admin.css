@@ -1,0 +1,25 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #F4F4F9;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+.navbar { box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+.navbar .btn-light { border-radius: 20px; font-weight: 500; }
+.bg-light { background-color: #fff !important; }
+.nav-pills .nav-link { border-radius: 0; padding: 12px 20px; font-weight: 500; transition: all 0.2s; }
+.nav-pills .nav-link:hover { background: linear-gradient(90deg,#6C63FF,#7A5CFF); color: #fff !important; transform: translateX(5px); }
+.nav-pills .nav-link.active { background: linear-gradient(90deg,#6C63FF,#7A5CFF); color: #fff !important; }
+.dashboard-card { border-radius: 15px; padding: 20px; color: #fff; text-align: center; font-family: 'Montserrat', sans-serif; box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: transform 0.2s; }
+.dashboard-card:hover { transform: translateY(-5px); }
+.card-products { background: linear-gradient(135deg, #6C63FF, #7A5CFF); }
+.card-users { background: linear-gradient(135deg, #FF6584, #ff85a1); }
+.card-designers { background: linear-gradient(135deg, #4cafef, #3a7bd5); }
+.card-orders { background: linear-gradient(135deg, #43e97b, #38f9d7); }
+.card { border: none; border-radius: 15px; }
+.card h5 { font-family: 'Montserrat', sans-serif; font-weight: 600; }
+@media (max-width: 768px) {
+    .col-md-2 { display: none; }
+    .col-md-10 { width: 100% !important; }
+}
