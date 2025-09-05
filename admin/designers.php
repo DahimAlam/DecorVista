@@ -11,15 +11,45 @@ include("sidebar.php");
 // Approve Designer
 if(isset($_GET['approve'])){
     $id = $_GET['approve'];
-    $conn->query("UPDATE designers SET status='approved' WHERE designer_id='$id'");
-    echo "<script>alert('Designer Approved'); window.location='designers.php';</script>";
+    
+    // Fetch designer details before updating the status
+    $result = $conn->query("SELECT * FROM designers WHERE designer_id='$id'");
+    $designer = $result->fetch_assoc();
+
+    // Get designer's name and email
+    $designer_name = $designer['name'];
+    $designer_email = $designer['email'];
+
+    // Update the designer's status to 'approved'
+    // $conn->query("UPDATE designers SET status='approved' WHERE designer_id='$id'");
+
+    
+    
+    // Redirect back to the designers page
+
+// after approval or action
+echo "
+<script>
+    setTimeout(function(){
+        window.location = 'designers.php';
+    }, 7000); // 5,000 ms = 5 seconds
+</script>
+";
+
+
 }
 
 // Reject Designer
 if(isset($_GET['reject'])){
     $id = $_GET['reject'];
-    $conn->query("UPDATE designers SET status='rejected' WHERE designer_id='$id'");
-    echo "<script>alert('Designer Rejected'); window.location='designers.php';</script>";
+    // $conn->query("UPDATE designers SET status='rejected' WHERE designer_id='$id'");
+    echo "
+<script>
+    setTimeout(function(){
+        window.location = 'designers.php';
+    }, 5000); // 7,000 ms = 5 seconds
+</script>
+";
 }
 
 // Delete Designer
@@ -86,3 +116,129 @@ $designers = $conn->query("SELECT * FROM designers ORDER BY designer_id DESC");
 </div>
 
 <?php include("footer.php"); ?>
+
+
+
+
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script> <!-- EmailJS Script -->
+
+
+
+
+
+
+
+<?php 
+include("../includes/db.php"); // DB connection include karo
+
+if(isset($_GET['approve'])){
+    $id = $_GET['approve'];
+
+    // Designer ka data DB se nikaalo
+    $result = $conn->query("SELECT email FROM designers WHERE designer_id = '$id'");
+
+    if($result && $result->num_rows > 0){
+        $designer = $result->fetch_assoc();
+        $designer_email = $designer['email']; // DB se email
+    } else {
+        $designer_email = ""; // fallback
+    }
+}
+
+if(isset($_GET['reject'])){
+    $rid = $_GET['reject'];
+
+    // Designer ka data DB se nikaalo
+    $result = $conn->query("SELECT email FROM designers WHERE designer_id = '$rid'");
+
+    if($result && $result->num_rows > 0){
+        $designer = $result->fetch_assoc();
+        $designer_email = $designer['email']; // DB se email
+
+        // PHP se JS code print karo
+        echo "<script>console.log('".$designer_email."');</script>";
+    } else {
+        $designer_email = ""; // fallback
+    }
+}
+
+?>
+
+
+<!-- EmailJS Initialization Script -->
+<script type="text/javascript">
+    (function(){
+        emailjs.init("J579UpZEsXdTE-U_c");  // Initialize EmailJS with public key
+    })();
+
+    // Function to send email
+    function sendMail() {
+        let emailValue = "<?php echo isset($designer_email) ? $designer_email : ''; ?>";
+
+        emailjs.send("service_xp925cn", "template_6tsn17k", {
+            name: "sham",
+            email: emailValue
+        })
+        .then(function(response) {
+            console.log("✅ Success:", response);
+            alert("Email sent successfully to " + emailValue);
+        })
+        .catch(function(error) {
+            console.error("❌ Error:", error);
+            alert("Failed to send email.");
+        });
+    }
+
+    // Agar approve ki query string lagi ho to automatic call karo
+    <?php if(isset($_GET['approve'])): ?>
+        sendMail();
+    <?php endif; ?>
+</script>
+
+
+
+
+
+<!-- EmailJS Initialization Script -->
+<script type="text/javascript">
+    (function(){
+        emailjs.init("3QQlYZGY5sYqbiuWH");  // Initialize EmailJS with public key
+    })();
+
+    // Function to send email
+    function sendMail() {
+        let emailValue = "<?php echo isset($designer_email) ? $designer_email : ''; ?>";
+
+        emailjs.send("service_7c6frxe", "template_94qfwkh", {
+            name: "sham",
+            email: emailValue
+        })
+        .then(function(response) {
+            console.log("✅ Success:", response);
+            alert("Email sent successfully to " + emailValue);
+        })
+        .catch(function(error) {
+            console.error("❌ Error:", error);
+            alert("Failed to send email.");
+        });
+    }
+
+    // Agar approve ki query string lagi ho to automatic call karo
+    <?php if(isset($_GET['reject'])): ?>
+        sendMail();
+    <?php endif; ?>
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
