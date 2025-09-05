@@ -199,7 +199,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Form submission event listener
         document.querySelector("#registrationForm").addEventListener("submit", function(event) {
-         location.reload();  // This will reload the page
+        //  location.reload();  // This will reload the page
             sendMail();  // Call sendMail function to send the email
 
         });
