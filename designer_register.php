@@ -23,12 +23,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (!preg_match("/^[0-9]{5}-[0-9]{7}-[0-9]{1}$/", $cnic)) {
         $msg = "Invalid CNIC format. Please enter as 12345-1234567-1";
     } else {
-        // Handle file uploads for CNIC and Profile images
-        $cnic_image    = "uploads/designers/cnic/" . time() . "_" . basename($_FILES["cnic_image"]["name"]);
-        $profile_image = "uploads/designers/profile/" . time() . "_" . basename($_FILES["profile_image"]["name"]);
+       // Handle file uploads for CNIC and Profile images
+$cnic_image = "uploads/designers/cnic/" . time() . "_" . basename($_FILES["cnic_image"]["name"]);
+move_uploaded_file($_FILES["cnic_image"]["tmp_name"], $cnic_image);
 
-        move_uploaded_file($_FILES["cnic_image"]["tmp_name"], $cnic_image);
-        move_uploaded_file($_FILES["profile_image"]["tmp_name"], $profile_image);
+$profile_image = "uploads/designers/profile/" . time() . "_" . basename($_FILES["profile_image"]["name"]);
+move_uploaded_file($_FILES["profile_image"]["tmp_name"], $profile_image);
+
+// Now $cnic_image and $profile_image contain the correct paths and filenames;
 
         // Hash the password before storing
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
@@ -199,8 +201,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // Form submission event listener
         document.querySelector("#registrationForm").addEventListener("submit", function(event) {
-        //  location.reload();  // This will reload the page
-            sendMail();  // Call sendMail function to send the email
+         event.preventDefault(); // Stop page reload
+                sendMail();  // Call sendMail function to send the email
 
         });
     </script>

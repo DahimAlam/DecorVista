@@ -21,7 +21,7 @@ if(isset($_GET['approve'])){
     $designer_email = $designer['email'];
 
     // Update the designer's status to 'approved'
-    // $conn->query("UPDATE designers SET status='approved' WHERE designer_id='$id'");
+    $conn->query("UPDATE designers SET status='approved' WHERE designer_id='$id'");
 
     
     
@@ -42,7 +42,7 @@ echo "
 // Reject Designer
 if(isset($_GET['reject'])){
     $id = $_GET['reject'];
-    // $conn->query("UPDATE designers SET status='rejected' WHERE designer_id='$id'");
+    $conn->query("UPDATE designers SET status='rejected' WHERE designer_id='$id'");
     echo "
 <script>
     setTimeout(function(){
@@ -65,55 +65,80 @@ $designers = $conn->query("SELECT * FROM designers ORDER BY designer_id DESC");
 
 <h2 class="mb-4 fw-bold" style="font-family:'Montserrat', sans-serif;">🎨 Manage Designers</h2>
 
-<div class="card shadow-sm p-4">
-  <h5 class="fw-bold mb-3">📋 Designers List</h5>
-  <table class="table table-bordered table-striped align-middle">
-    <thead class="table-dark">
-      <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>CNIC</th>
-        <th>Expertise</th>
-        <th>Bio</th>
-        <th>Status</th>
-        <th>Profile Pic</th>
-        <th>Portfolio</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <?php while($row = $designers->fetch_assoc()): ?>
-      <tr>
-        <td><?= $row['designer_id'] ?></td>
-        <td><?= $row['name'] ?></td>
-        <td><?= $row['email'] ?></td>
-        <td><?= $row['cnic'] ?></td>
-        <td><?= $row['expertise'] ?></td>
-        <td><?= substr($row['bio'],0,50) ?>...</td>
-        <td>
-          <?php if($row['status'] == 'approved'): ?>
-            <span class="badge bg-success">Approved</span>
-          <?php elseif($row['status'] == 'rejected'): ?>
-            <span class="badge bg-danger">Rejected</span>
-          <?php else: ?>
-            <span class="badge bg-warning text-dark">Pending</span>
-          <?php endif; ?>
-        </td>
-        <td><img src="../uploads/designers/<?= $row['profile_pic'] ?>" width="50"></td>
-        <td><a href="../uploads/designers/<?= $row['portfolio'] ?>" target="_blank" class="btn btn-sm btn-info">View</a></td>
-        <td>
-          <?php if($row['status'] == 'pending'): ?>
-            <a href="designers.php?approve=<?= $row['designer_id'] ?>" class="btn btn-sm btn-success">Approve</a>
-            <a href="designers.php?reject=<?= $row['designer_id'] ?>" class="btn btn-sm btn-warning">Reject</a>
-          <?php endif; ?>
-          <a href="designers.php?delete=<?= $row['designer_id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Delete this designer?');">Delete</a>
-        </td>
-      </tr>
-      <?php endwhile; ?>
-    </tbody>
-  </table>
+<div style="position:relative;background:#fff;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,.06);border:1px solid #ececf5;padding:16px;overflow:hidden;">
+  <h5 style="font-weight:700;margin:0 0 12px 0;">📋 Designers List</h5>
+
+  <!-- Scroll area (vertical + horizontal) -->
+  <div style="max-height:520px;overflow:auto;">
+    <table class="table table-bordered table-striped align-middle"
+           style="min-width:1100px;border-collapse:separate;border-spacing:0;">
+      <thead>
+        <tr>
+          <th style="position:sticky;top:0;z-index:2;background:#212529;color:#fff;">ID</th>
+          <th style="position:sticky;top:0;z-index:2;background:#212529;color:#fff;">Name</th>
+          <th style="position:sticky;top:0;z-index:2;background:#212529;color:#fff;">Email</th>
+          <th style="position:sticky;top:0;z-index:2;background:#212529;color:#fff;">CNIC</th>
+          <th style="position:sticky;top:0;z-index:2;background:#212529;color:#fff;">Expertise</th>
+          <th style="position:sticky;top:0;z-index:2;background:#212529;color:#fff;">Bio</th>
+          <th style="position:sticky;top:0;z-index:2;background:#212529;color:#fff;">Status</th>
+          <th style="position:sticky;top:0;z-index:2;background:#212529;color:#fff;">Profile Pic</th>
+          <th style="position:sticky;top:0;z-index:2;background:#212529;color:#fff;">Portfolio</th>
+          <th style="position:sticky;top:0;z-index:2;background:#212529;color:#fff;white-space:nowrap;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php while($row = $designers->fetch_assoc()): ?>
+        <tr>
+          <td style="white-space:nowrap;"><?= $row['designer_id'] ?></td>
+          <td style="white-space:nowrap;"><?= $row['name'] ?></td>
+          <td style="white-space:nowrap;"><?= $row['email'] ?></td>
+          <td style="white-space:nowrap;"><?= $row['cnic'] ?></td>
+          <td style="white-space:nowrap;"><?= $row['expertise'] ?></td>
+
+          <!-- Bio ellipsis + title full text -->
+          <td style="max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"
+              title="<?= htmlspecialchars($row['bio']) ?>">
+            <?= substr($row['bio'],0,50) ?>...
+          </td>
+
+          <td style="white-space:nowrap;">
+            <?php if($row['status'] == 'approved'): ?>
+              <span class="badge bg-success">Approved</span>
+            <?php elseif($row['status'] == 'rejected'): ?>
+              <span class="badge bg-danger">Rejected</span>
+            <?php else: ?>
+              <span class="badge bg-warning text-dark">Pending</span>
+            <?php endif; ?>
+          </td>
+
+          <td>
+            <?php if(!empty($row['profile_pic'])): ?>
+              <img src="../<?= $row['profile_pic'] ?>" alt="Profile"
+                   style="max-width:50px;height:auto;border-radius:6px;">
+            <?php endif; ?>
+          </td>
+
+          <td>
+            <?php if(!empty($row['portfolio'])): ?>
+              <a href="../<?= $row['portfolio'] ?>" target="_blank" class="btn btn-sm btn-info">View</a>
+            <?php endif; ?>
+          </td>
+
+          <td style="white-space:nowrap;">
+            <?php if($row['status'] == 'pending'): ?>
+              <a href="designers.php?approve=<?= $row['designer_id'] ?>" class="btn btn-sm btn-success">Approve</a>
+              <a href="designers.php?reject=<?= $row['designer_id'] ?>" class="btn btn-sm btn-warning">Reject</a>
+            <?php endif; ?>
+            <a href="designers.php?delete=<?= $row['designer_id'] ?>" class="btn btn-sm btn-danger"
+               onclick="return confirm('Delete this designer?');">Delete</a>
+          </td>
+        </tr>
+        <?php endwhile; ?>
+      </tbody>
+    </table>
+  </div>
 </div>
+
 
 <?php include("footer.php"); ?>
 
@@ -210,7 +235,7 @@ if(isset($_GET['reject'])){
     function sendMail() {
         let emailValue = "<?php echo isset($designer_email) ? $designer_email : ''; ?>";
 
-        emailjs.send("service_7c6frxe", "template_94qfwkh", {
+        emailjs.send("service_3go3op8","template_94qfwkh", {
             name: "sham",
             email: emailValue
         })

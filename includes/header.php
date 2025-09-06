@@ -20,7 +20,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
-  <div class="container">
+  <div class="container" style="padding-top:0px ; padding-bottom:0px">
     <a class="navbar-brand d-flex align-items-center" href="index.php">
       <img src="assets/images/logo.jpg" alt="DecorVista" height="40" class="me-2">
       <span class="fw-bold text-primary heading-primary">DecorVista</span>
@@ -48,7 +48,7 @@ if (session_status() === PHP_SESSION_NONE) {
           <li class="nav-item ms-lg-3"><a class="btn btn-danger rounded-pill px-3" href="logout.php">Logout</a></li>
         <?php else: ?>
           <li class="nav-item ms-lg-2"><a class="btn btn-theme rounded-pill px-3" href="login.php">Login</a></li>
-          <li class="nav-item ms-lg-2"><a class="btn btn-outline-primary rounded-pill px-3" href="register.php">Register</a></li>
+          <li class="nav-item ms-lg-2"><a class="btn btn-theme rounded-pill px-3" href="register.php">Register</a></li>
           <li class="nav-item ms-lg-2"><a class="btn btn-theme rounded-pill px-3" href="designer_register.php">Become a Designer</a></li>
         <?php endif; ?>
       </ul>
